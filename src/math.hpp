@@ -39,6 +39,7 @@ double modified_newton_raphson(
     const CubicEquation& f,
     const double x0,
     const double locally_min_gradient,
-    const double tolerance = 1e-6);
+    const double tolerance = 1e-6,
+    const int max_iter = 100);
 
 } // namespace ccd

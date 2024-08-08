@@ -1,6 +1,7 @@
 #include <catch2/catch_all.hpp>
 
 #include <ccd.hpp>
+#include <autogen.hpp>
 
 using namespace ccd;
 
@@ -115,8 +116,14 @@ TEST_CASE("Point-Triangle CCD", "[ccd][3D][point-triangle][!mayfail]")
     bool is_colliding = point_triangle_ccd(
         p_t0, t0_t0, t1_t0, t2_t0, p_t1, t0_t1, t1_t1, t2_t1, toi);
 
+    CAPTURE(autogen::point_triangle_ccd_equation(
+        p_t0.x(), p_t0.y(), p_t0.z(), t0_t0.x(), t0_t0.y(), t0_t0.z(),
+        t1_t0.x(), t1_t0.y(), t1_t0.z(), t2_t0.x(), t2_t0.y(), t2_t0.z(),
+        p_t1.x(), p_t1.y(), p_t1.z(), t0_t1.x(), t0_t1.y(), t0_t1.z(),
+        t1_t1.x(), t1_t1.y(), t1_t1.z(), t2_t1.x(), t2_t1.y(), t2_t1.z()));
+
     if (conservative_check) {
-        CHECK(is_colliding >= is_collision_expected);
+        CHECK((is_colliding || !is_collision_expected));
     } else {
         CHECK(is_colliding == is_collision_expected);
     }

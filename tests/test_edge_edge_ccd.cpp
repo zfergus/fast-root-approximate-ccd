@@ -1,6 +1,7 @@
 #include <catch2/catch_all.hpp>
 
 #include <ccd.hpp>
+#include <autogen.hpp>
 
 using namespace ccd;
 
@@ -111,11 +112,18 @@ TEST_CASE("Edge-Edge CCD", "[ccd][3D][edge-edge][!mayfail]")
     }
     INFO(name);
 
+    CAPTURE(autogen::edge_edge_ccd_equation(
+        ea0_t0.x(), ea0_t0.y(), ea0_t0.z(), ea1_t0.x(), ea1_t0.y(), ea1_t0.z(),
+        eb0_t0.x(), eb0_t0.y(), eb0_t0.z(), eb1_t0.x(), eb1_t0.y(), eb1_t0.z(),
+        ea0_t1.x(), ea0_t1.y(), ea0_t1.z(), ea1_t1.x(), ea1_t1.y(), ea1_t1.z(),
+        eb0_t1.x(), eb0_t1.y(), eb0_t1.z(), eb1_t1.x(), eb1_t1.y(),
+        eb1_t1.z()));
+
     double toi;
     bool is_colliding = edge_edge_ccd(
         ea0_t0, ea1_t0, eb0_t0, eb1_t0, ea0_t1, ea1_t1, eb0_t1, eb1_t1, toi);
     if (conservative_check) {
-        CHECK(is_colliding >= is_collision_expected);
+        CHECK((is_colliding || !is_collision_expected));
     } else {
         CHECK(is_colliding == is_collision_expected);
     }

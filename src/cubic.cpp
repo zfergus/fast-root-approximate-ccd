@@ -43,13 +43,13 @@ bool CubicEquation::is_nearly_quadratic(const double tol) const
 
 bool CubicEquation::is_nearly_linear(const double tol) const
 {
-    return is_nearly_quadratic()
+    return is_nearly_quadratic(tol)
         && (std::abs(b) < tol || std::abs(b / (c != 0 ? c : 1)) < tol);
 }
 
 bool CubicEquation::is_nearly_constant(const double tol) const
 {
-    return is_nearly_linear()
+    return is_nearly_linear(tol)
         && (std::abs(c) < tol || std::abs(c / (d != 0 ? d : 1)) < tol);
 }
 

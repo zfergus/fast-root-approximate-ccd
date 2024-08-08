@@ -86,6 +86,7 @@ bool fast_approximate_root_ccd(
                 return true;
             }
         }
+        return false; // no roots in [0, 1]
     } else if (4 * d.b * d.b - 12 * d.a * d.c < 0) {
         return false;
     }
@@ -113,7 +114,7 @@ std::optional<RootInterval>
 determine_cubic_root_interval(const CubicEquation& d)
 {
     constexpr double t0 = 0, t1 = 1;
-    assert(d(t0) > 0);
+    assert(d(t0) >= 0);
 
     const auto [tm0, tm1] = d.extrema();
     assert(tm0 <= tm1);
