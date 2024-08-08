@@ -8,7 +8,7 @@ Implementation of "Fast Root Approximate in Cubic CCD" from "Penetration-free Pr
 
 After testing this method can produce false negatives (i.e., miss collisions).
 
-Note, that while this is a faithful implementation of the paper's algorithmic description, there may be technical implementation details missing from the paper that are required for the algorithm to work correctly. However, without the original authors' implementation, it is difficult to know.
+Note that while this is a faithful implementation of the paper's algorithmic description, technical implementation details may be missing from the paper that are required for the algorithm to work correctly. However, without the original authors' implementation, it is difficult to know.
 
 ### Example: Point-Triangle
 
