@@ -71,6 +71,7 @@ bool fast_approximate_root_ccd(
         d *= -1;
     }
 
+    std::optional<RootInterval> root_interval;
     if (d.is_nearly_constant()) {
         toi = 0;
         return d.d == 0;
@@ -87,8 +88,24 @@ bool fast_approximate_root_ccd(
             }
         }
         return false; // no roots in [0, 1]
-    } else if (4 * d.b * d.b - 12 * d.a * d.c < 0) {
-        return false;
+    } else if (d.b * d.b - 3 * d.a * d.c < 0) {
+        // no extrema (radical of f'(x) is imaginary) -> d is monotonic
+        if ((d(0) > 0 && d(1) > 0) || (d(0) < 0 && d(1) < 0)) {
+            return false; // no roots in [0, 1]
+        }
+
+        // Minimum gradient in [0, 1] is the minimum of the gradient at the
+        // endpoints and the inflection point.
+        double min_gradient = std::min(d.derivative(0), d.derivative(1));
+        const double inflection = d.inflection();
+        if (0 < inflection && inflection < 1) {
+            min_gradient = std::min(min_gradient, d.derivative(inflection));
+        }
+
+        // root in [0, 1]
+        root_interval = RootInterval(0, 1, min_gradient);
+    } else {
+        root_interval = determine_cubic_root_interval(d);
     }
 
     // for (const auto& [a, b, min_gradient] : d.monotonic_intervals()) {
@@ -99,7 +116,6 @@ bool fast_approximate_root_ccd(
     // }
     // return false;
 
-    const auto root_interval = determine_cubic_root_interval(d);
     if (!root_interval || root_interval->a > root_interval->b) {
         return false;
     }
@@ -127,7 +143,7 @@ determine_cubic_root_interval(const CubicEquation& d)
             // assert(d(t0) > 0);
             return std::nullopt;
         }
-        return RootInterval(t_max, t_min, d.derivative((t_min + t_max) / 2));
+        return RootInterval(t_max, t_min, d.derivative(d.inflection()));
     }
 
     const double t_min = tm0, t_max = tm1;
